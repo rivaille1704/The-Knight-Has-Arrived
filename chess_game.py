@@ -20,12 +20,16 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.RESIZABLE)
 pygame.display.set_caption("Chess")
 
 SPRITE_SHEET_BLUE_STAND = pygame.image.load("images/knight_blue_stand.png").convert_alpha()
+SPRITE_SHEET_BLUE_STAND_R = pygame.image.load("images/knight_blue_stand_r.png").convert_alpha()
 SPRITE_SHEET_BLUE_RUN = pygame.image.load("images/knight_blue_run.png").convert_alpha()
 SPRITE_SHEET_GREEN_STAND = pygame.image.load("images/knight_green_stand.png").convert_alpha()
+SPRITE_SHEET_GREEN_STAND_R = pygame.image.load("images/knight_green_stand_r.png").convert_alpha()
 SPRITE_SHEET_GREEN_RUN = pygame.image.load("images/knight_green_run.png").convert_alpha()
 SPRITE_SHEET_GOLD_STAND = pygame.image.load("images/knight_gold_stand.png").convert_alpha()
+SPRITE_SHEET_GOLD_STAND_R = pygame.image.load("images/knight_gold_stand_r.png").convert_alpha()
 SPRITE_SHEET_GOLD_RUN = pygame.image.load("images/knight_gold_run.png").convert_alpha()
 SPRITE_SHEET_RED_STAND = pygame.image.load("images/knight_red_stand.png").convert_alpha()
+SPRITE_SHEET_RED_STAND_R = pygame.image.load("images/knight_red_stand_r.png").convert_alpha()
 SPRITE_SHEET_RED_RUN = pygame.image.load("images/knight_red_run.png").convert_alpha()
 
 FRAME_WIDTH = 64
@@ -75,13 +79,17 @@ class Knight:
         self.col = col
 
 def resize_screen(new_width, new_height):
-    global WIDTH, HEIGHT, SQUARE_SIZE, SPRITE_SHEET_BLUE_STAND, SPRITE_SHEET_RED_STAND, SPRITE_SHEET_GREEN_STAND, SPRITE_SHEET_GOLD_STAND
+    global WIDTH, HEIGHT, SQUARE_SIZE, SPRITE_SHEET_BLUE_STAND, SPRITE_SHEET_RED_STAND, SPRITE_SHEET_GREEN_STAND, SPRITE_SHEET_GOLD_STAND, SPRITE_SHEET_BLUE_STAND_R, SPRITE_SHEET_GREEN_STAND_R, SPRITE_SHEET_GOLD_STAND_R, SPRITE_SHEET_RED_STAND_R
     WIDTH, HEIGHT = new_width, new_height
     SQUARE_SIZE = WIDTH // COLS
     SPRITE_SHEET_BLUE_STAND = pygame.transform.scale(SPRITE_SHEET_BLUE_STAND, (SQUARE_SIZE, SQUARE_SIZE))
     SPRITE_SHEET_RED_STAND = pygame.transform.scale(SPRITE_SHEET_RED_STAND, (SQUARE_SIZE, SQUARE_SIZE))
     SPRITE_SHEET_GREEN_STAND = pygame.transform.scale(SPRITE_SHEET_GREEN_STAND, (SQUARE_SIZE, SQUARE_SIZE))
     SPRITE_SHEET_GOLD_STAND = pygame.transform.scale(SPRITE_SHEET_GOLD_STAND, (SQUARE_SIZE, SQUARE_SIZE))
+    SPRITE_SHEET_BLUE_STAND_R = pygame.transform.scale(SPRITE_SHEET_BLUE_STAND_R, (SQUARE_SIZE, SQUARE_SIZE))
+    SPRITE_SHEET_RED_STAND_R = pygame.transform.scale(SPRITE_SHEET_RED_STAND_R, (SQUARE_SIZE, SQUARE_SIZE))
+    SPRITE_SHEET_GREEN_STAND_R = pygame.transform.scale(SPRITE_SHEET_GREEN_STAND_R, (SQUARE_SIZE, SQUARE_SIZE))
+    SPRITE_SHEET_GOLD_STAND_R = pygame.transform.scale(SPRITE_SHEET_GOLD_STAND_R, (SQUARE_SIZE, SQUARE_SIZE))
     for key in PIECES:
         PIECES[key] = [pygame.transform.scale(frame, (SQUARE_SIZE, SQUARE_SIZE)) for frame in PIECES[key]]
 
@@ -111,22 +119,7 @@ def place_pieces(knights):
     
     for knight in knights:
         row, col = knight.get_pos()
-        if knight.color == "blue":
-            screen.blit(SPRITE_SHEET_BLUE_STAND, (start_x + col * SQUARE_SIZE, start_y + row * SQUARE_SIZE))
-        elif knight.color == "red":
-            screen.blit(SPRITE_SHEET_RED_STAND, (start_x + col * SQUARE_SIZE, start_y + row * SQUARE_SIZE))
-        elif knight.color == "green":
-            screen.blit(SPRITE_SHEET_GREEN_STAND, (start_x + col * SQUARE_SIZE, start_y + row * SQUARE_SIZE))
-        elif knight.color == "gold":
-            screen.blit(SPRITE_SHEET_GOLD_STAND, (start_x + col * SQUARE_SIZE, start_y + row * SQUARE_SIZE))
-
-def place_pieces_move(knights, selected_knight):
-    start_x = (WIDTH - COLS * SQUARE_SIZE) // 2
-    start_y = (HEIGHT - ROWS * SQUARE_SIZE) // 2 + OFFSET
-
-    for knight in knights:
-        if knight != selected_knight:
-            row, col = knight.get_pos()
+        if col != COLS - 1:
             if knight.color == "blue":
                 screen.blit(SPRITE_SHEET_BLUE_STAND, (start_x + col * SQUARE_SIZE, start_y + row * SQUARE_SIZE))
             elif knight.color == "red":
@@ -135,6 +128,40 @@ def place_pieces_move(knights, selected_knight):
                 screen.blit(SPRITE_SHEET_GREEN_STAND, (start_x + col * SQUARE_SIZE, start_y + row * SQUARE_SIZE))
             elif knight.color == "gold":
                 screen.blit(SPRITE_SHEET_GOLD_STAND, (start_x + col * SQUARE_SIZE, start_y + row * SQUARE_SIZE))
+        else: 
+            if knight.color == "blue":
+                screen.blit(SPRITE_SHEET_BLUE_STAND_R, (start_x + col * SQUARE_SIZE, start_y + row * SQUARE_SIZE))
+            elif knight.color == "red":
+                screen.blit(SPRITE_SHEET_RED_STAND_R, (start_x + col * SQUARE_SIZE, start_y + row * SQUARE_SIZE))
+            elif knight.color == "green":
+                screen.blit(SPRITE_SHEET_GREEN_STAND_R, (start_x + col * SQUARE_SIZE, start_y + row * SQUARE_SIZE))
+            elif knight.color == "gold":
+                screen.blit(SPRITE_SHEET_GOLD_STAND_R, (start_x + col * SQUARE_SIZE, start_y + row * SQUARE_SIZE))
+def place_pieces_move(knights, selected_knight):
+    start_x = (WIDTH - COLS * SQUARE_SIZE) // 2
+    start_y = (HEIGHT - ROWS * SQUARE_SIZE) // 2 + OFFSET
+
+    for knight in knights:
+        if knight != selected_knight:
+            row, col = knight.get_pos()
+            if col != COLS - 1:
+                if knight.color == "blue":
+                    screen.blit(SPRITE_SHEET_BLUE_STAND, (start_x + col * SQUARE_SIZE, start_y + row * SQUARE_SIZE))
+                elif knight.color == "red":
+                    screen.blit(SPRITE_SHEET_RED_STAND, (start_x + col * SQUARE_SIZE, start_y + row * SQUARE_SIZE))
+                elif knight.color == "green":
+                    screen.blit(SPRITE_SHEET_GREEN_STAND, (start_x + col * SQUARE_SIZE, start_y + row * SQUARE_SIZE))
+                elif knight.color == "gold":
+                    screen.blit(SPRITE_SHEET_GOLD_STAND, (start_x + col * SQUARE_SIZE, start_y + row * SQUARE_SIZE))
+            else: 
+                if knight.color == "blue":
+                    screen.blit(SPRITE_SHEET_BLUE_STAND_R, (start_x + col * SQUARE_SIZE, start_y + row * SQUARE_SIZE))
+                elif knight.color == "red":
+                    screen.blit(SPRITE_SHEET_RED_STAND_R, (start_x + col * SQUARE_SIZE, start_y + row * SQUARE_SIZE))
+                elif knight.color == "green":
+                    screen.blit(SPRITE_SHEET_GREEN_STAND_R, (start_x + col * SQUARE_SIZE, start_y + row * SQUARE_SIZE))
+                elif knight.color == "gold":
+                    screen.blit(SPRITE_SHEET_GOLD_STAND_R, (start_x + col * SQUARE_SIZE, start_y + row * SQUARE_SIZE))
 
 def select_knight(knights, mouse_pos):
     start_x = (WIDTH - COLS * SQUARE_SIZE) // 2
@@ -186,6 +213,17 @@ def move_knight(knights, selected_knight, target_pos, animation_time=1, run_anim
 
     selected_knight.set_pos(target_row, target_col)
 
+def draw_reset_button():
+    font = pygame.font.Font(None, 36)
+    text = font.render("Reset", True, BLACK, GRAY)
+    text_rect = text.get_rect(center=(WIDTH // 2, OFFSET // 2))
+    pygame.draw.rect(screen, GRAY, text_rect.inflate(20, 10))
+    screen.blit(text, text_rect)
+    return text_rect
+def reset_board(knights):
+    knights[0].set_pos(0, 0)  
+    knights[1].set_pos(1, 0)
+    knights[2].set_pos(2, 0)  
 def main():
     clock = pygame.time.Clock()
     running = True
@@ -207,7 +245,9 @@ def main():
                 screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.RESIZABLE)
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:
-                    if selected_knight is None:
+                    if reset_button_rect.collidepoint(event.pos):
+                        reset_board(knights)
+                    elif selected_knight is None:
                         selected_knight, selected_knight_pos = select_knight(knights, event.pos)
                     else:
                         start_x = (WIDTH - COLS * SQUARE_SIZE) // 2
@@ -217,10 +257,9 @@ def main():
                         move_knight(knights, selected_knight, (target_row, target_col))
                         selected_knight = None
                         selected_knight_pos = None
-
         draw_board(selected_knight_pos)
         place_pieces(knights)
-
+        reset_button_rect = draw_reset_button()
         pygame.display.flip()
         clock.tick(60)
 
